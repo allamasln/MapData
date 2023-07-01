@@ -1,63 +1,22 @@
-const express = require('express')
-const fetch = require('node-fetch')
-
 require('dotenv').config()
 
+const cors = require('cors')
+const express = require('express')
 
-let safetyTime = false 
+const app = express()
 
-const app = express();
-let keysIndex = 0
-const keys = [process.env.APISECRETKEY_1_F, process.env.APISECRETKEY_1_A]
+app.use(cors())
 
+const swaggerUI = require('swagger-ui-express')
+const swaggerDocs = require('./startup/docs')
 
-async function fetchData() {
-    const response = await fetch('https://api.nationaltransport.ie/gtfsr/v2/Vehicles?format=json', {
-        method: 'GET',
-        // Request headers
-        headers: {
-            'Cache-Control': 'no-cache',
-            'x-api-key': keys[keysIndex],}})
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-    if(response.status > 300) {
-        keysIndex++ 
-
-        if(keysIndex === keys.length) keysIndex = 0
-
-        fetchData()
-
-    }
-
-
-
-    const data = await response.json();
-
-    return data
-}
-
-app.get('/ping', async(req, res) => {
-    keysIndex++ 
-
-    if(keysIndex === keys.length) keysIndex = 0
-
-if(safetyTime) return res.status(400).json({error: 'Esperando tiempo de seguridad'})
-
-safetyTime = true
-
-setTimeout(() => {
-    safetyTime = false
-}, 3000)
-
-
-
-const data = await fetchData()
-
-console.log('Usaste la ' + keysIndex)
-res.json(data)
-                                         
-})
-
+app.use('/api/realtime', require('./routes/realtime'))
+app.use('/api', require('./routes/constants'))
 
 const port = process.env.PORT || 3000
 
-app.listen(port, () => console.log(`SERVIDOR CONECTADO EN: http://localhost:${port}`))
+app.listen(port, () =>
+	console.log(`SERVIDOR CONECTADO EN: http://localhost:${port}`)
+)

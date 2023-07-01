@@ -1,7 +1,7 @@
 const axios = require('axios').default
 
 let keysIndex = 0
-const keys = [process.env.APISECRETKEY_1_F]
+const keys = [process.env.APISECRETKEY_1_F, process.env.APISECRETKEY_1_A]
 
 const customAxiosApi = axios.create({
 	baseURL: 'https://api.nationaltransport.ie/gtfsr/v2/',
