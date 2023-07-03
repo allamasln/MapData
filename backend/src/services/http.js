@@ -17,8 +17,9 @@ const customAxiosApi = axios.create({
 })
 
 function getkeysIndex() {
-	console.log(keysIndex)
-	return keys[keysIndex++]
+	if (++keysIndex > keys.length - 1) keysIndex = 0
+
+	return keys[keysIndex]
 }
 
 module.exports = { customAxiosApi, getkeysIndex }
