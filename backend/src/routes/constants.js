@@ -60,10 +60,7 @@ router.get('/routes/:routeId', async (req, res) => {
 router.get('/trips/route/:routeId', async (req, res) => {
 	const route_id = req.params.routeId
 
-	let trips = await Trip.find({ route_id }, { _id: 0 })
-		.populate('shapes', { _id: 0 })
-		.lean()
-		.exec()
+	let trips = await Trip.find({ route_id }, { _id: 0 }).lean().exec()
 
 	res.json(trips)
 })
@@ -79,22 +76,22 @@ router.get('/trips/route/:routeId', async (req, res) => {
  *         description: Returns a mysterious string.
  */
 
-// router.get('/shapes/:tripId', async (req, res) => {
-// 	const trip_id = req.params.tripId
+router.get('/shapes/:tripId', async (req, res) => {
+	const trip_id = req.params.tripId
 
-// 	const { shape_id } = await Trip.findOne({ trip_id }).exec()
+	const { shape_id } = await Trip.findOne({ trip_id }).exec()
 
-// 	const shapes = await Shape.find({ shape_id }).exec()
-
-// 	res.json(shapes)
-// })
-
-router.get('/shapes/:shapeId', async (req, res) => {
-	const shape_id = req.params.shapeId
 	const shapes = await Shape.find({ shape_id }).exec()
 
 	res.json(shapes)
 })
+
+// router.get('/shapes/:shapeId', async (req, res) => {
+// 	const shape_id = req.params.shapeId
+// 	const shapes = await Shape.find({ shape_id }).exec()
+
+// 	res.json(shapes)
+// })
 
 /**
  * @openapi
