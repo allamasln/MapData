@@ -20,18 +20,15 @@ const tripSchema = new Schema(
 	},
 	{
 		toJSON: {
-			transform: (_, ret) => {
-				delete ret._id && delete ret.__v
-			},
+			virtuals: true,
 		},
 	}
 )
 
-tripSchema.virtual('lolaaaa', {
+tripSchema.virtual('shapes', {
 	ref: 'Shape',
 	localField: 'shape_id',
 	foreignField: 'shape_id',
-	count: true,
 })
 
 module.exports = model('Trip', tripSchema)

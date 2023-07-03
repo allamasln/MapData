@@ -1,7 +1,12 @@
 const axios = require('axios').default
 
 let keysIndex = 0
-const keys = [process.env.APISECRETKEY_1_F, process.env.APISECRETKEY_1_A]
+const keys = [
+	process.env.APISECRETKEY_1_F,
+	process.env.APISECRETKEY_1_A,
+	process.env.APISECRETKEY_1_1,
+	process.env.APISECRETKEY_1_2,
+]
 
 const customAxiosApi = axios.create({
 	baseURL: 'https://api.nationaltransport.ie/gtfsr/v2/',
@@ -11,28 +16,9 @@ const customAxiosApi = axios.create({
 	},
 })
 
-const globalConfig = {
-	retry: 3,
-	retryDelay: 1000,
+function getkeysIndex() {
+	console.log(keysIndex)
+	return keys[keysIndex++]
 }
 
-customAxiosApi.interceptors.response.use(
-	(response) => response,
-	(error) => {
-		const { config } = error
-
-		if (!config || !config.retry) {
-			return Promise.reject(error)
-		}
-		config.retry -= 1
-		const delayRetryRequest = new Promise((resolve) => {
-			setTimeout(() => {
-				console.log('retry the request', config.url)
-				resolve()
-			}, config.retryDelay || 1000)
-		})
-		return delayRetryRequest.then(() => customAxiosApi(config))
-	}
-)
-
-module.exports = { customAxiosApi, globalConfig }
+module.exports = { customAxiosApi, getkeysIndex }

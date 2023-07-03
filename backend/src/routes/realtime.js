@@ -3,7 +3,7 @@ const fetch = require('node-fetch')
 
 const router = express.Router()
 
-const { customAxiosApi, globalConfig } = require('../services/http')
+const { customAxiosApi, getkeysIndex } = require('../services/http')
 
 /**
  * @openapi
@@ -18,10 +18,11 @@ const { customAxiosApi, globalConfig } = require('../services/http')
  */
 
 router.get('/vehicles', async (req, res) => {
-	const { data } = await customAxiosApi.get(
-		'/vehicles?format=json',
-		globalConfig
-	)
+	const { data } = await customAxiosApi.get('/vehicles?format=json', {
+		headers: {
+			'x-api-key': getkeysIndex(),
+		},
+	})
 
 	res.json(data.entity)
 })
@@ -39,10 +40,11 @@ router.get('/vehicles', async (req, res) => {
  */
 
 router.get('/trip-updates', async (req, res) => {
-	const { data } = await customAxiosApi.get(
-		'/TripUpdates?format=json',
-		globalConfig
-	)
+	const { data } = await customAxiosApi.get('/TripUpdates?format=json', {
+		headers: {
+			'x-api-key': getkeysIndex(),
+		},
+	})
 
 	res.json(data.entity)
 })
